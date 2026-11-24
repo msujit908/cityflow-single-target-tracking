@@ -23,7 +23,22 @@ This repository implements a single-target tracking framework across multiple no
 
 ---
 
-## 2. System Architecture
+## 2. Input and Output Videos
+
+All raw input surveillance footage and rendered tracking output videos are available directly in the [videos/](videos/) directory:
+
+### Input Traffic Camera Footage (CityFlow Benchmark)
+* **Camera 1 Entrance Feed (`c001`):** [`videos/input_camera_c001.mp4`](videos/input_camera_c001.mp4) (1920&times;1080 @ 30 FPS)
+* **Camera 2 Downstream Feed (`c002`):** [`videos/input_camera_c002.mp4`](videos/input_camera_c002.mp4) (1920&times;1080 @ 30 FPS)
+
+### Output Tracking Videos (Proposed Method)
+* **Camera 1 Tracking Video:** [`videos/output_tracking_c001.mp4`](videos/output_tracking_c001.mp4) &mdash; Follows target from initialization to boundary exit at Frame 17.
+* **Camera 2 Tracking Video:** [`videos/output_tracking_c002.mp4`](videos/output_tracking_c002.mp4) &mdash; Demonstrates verified reacquisition at Frame 32 under persistent global ID `VEHICLE_001`.
+* **Synchronized Multi-Camera Dashboard Video:** [`videos/output_dashboard_synchronized.mp4`](videos/output_dashboard_synchronized.mp4) &mdash; Split-screen view showing both cameras with real-time HUD telemetry.
+
+---
+
+## 3. System Architecture
 
 ```
 +-------------------------------------------------------+
