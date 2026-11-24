@@ -1,0 +1,82 @@
+# CityFlow Single-Target Multi-Camera Vehicle Tracking Configuration
+# Single-Target Multi-Camera Vehicle Tracking Across Static Traffic Cameras
+# Using Appearance and Spatio-Temporal Association
+
+dataset:
+  # Path to CityFlow dataset root. Fully configurable via DATASET_ROOT
+  root: "sample_data/cityflow_sample"
+  scene: "S01"
+  fps: 30.0
+  format: "auto"
+
+target:
+  # Global Target Vehicle ID to track
+  target_id: 1
+  # Initial camera view where target is selected
+  initial_camera: "c001"
+  # Selection mode: 'benchmark' (ground-truth vehicle initialization) or 'interactive' (manual bbox)
+  selection_mode: "benchmark"
+  # Interactive manual bbox fallback: [x, y, w, h]
+  manual_bbox: [605, 448, 459, 258]
+
+local_tracker:
+  # Tracker type: 'csrt' (OpenCV CSRT / MIL hybrid with PSR & NCC), 'mil', 'dcf', 'deep'
+  type: "csrt"
+  confidence_threshold: 0.45
+  failure_threshold: 0.35
+  update_gating_threshold: 0.65
+
+detector:
+  # Pretrained vehicle detector backend: 'ssdlite' (MobileNetV3), 'fasterrcnn', 'yolo', 'opencv'
+  backend: "ssdlite"
+  confidence_threshold: 0.40
+  device: "cuda"  # Auto-falls back to 'cpu' if CUDA is unavailable
+  classes:
+    - "car"
+    - "bus"
+    - "truck"
+    - "motorcycle"
+
+reid:
+  # Deep Vehicle Re-Identification backbone: 'resnet50' (ImageNet pretrained)
+  backbone: "resnet50"
+  embedding_dim: 2048
+  device: "cuda"  # Auto-falls back to 'cpu' if CUDA is unavailable
+  similarity_metric: "cosine"
+  gallery_size: 10
+  ema_alpha: 0.10
+
+association:
+  # Normalized static weights for Baseline 3 (w1 + w2 + w3 + w4 = 1.0)
+  weights:
+    appearance: 0.40
+    temporal: 0.25
+    topology: 0.20
+    motion: 0.15
+  reacquisition_threshold: 0.55
+  search_window_frames: 60
+  min_travel_delay: 5
+  max_travel_delay: 45
+
+proposed_method:
+  # Reliability-Aware Cross-Camera Association with Adaptive Confidence & Target Recovery
+  enable_adaptive_reliability: true
+  appearance_quality_weight: 0.30
+  temporal_decay_factor: 0.05
+  detection_confidence_weight: 0.20
+  spatial_consistency_weight: 0.25
+  target_recovery_max_patience: 90
+
+evaluation:
+  iou_threshold: 0.50
+  center_error_threshold_px: 50.0
+  fps_benchmark_runs: 3
+
+visualization:
+  save_annotated_videos: true
+  save_dashboard_video: true
+  output_video_fps: 30
+  bbox_color: [0, 255, 0]          # Active: Green (BGR)
+  lost_color: [0, 0, 255]          # Lost: Red
+  reacquired_color: [0, 255, 255]  # Reacquired: Yellow
+  searching_color: [255, 165, 0]   # Searching: Orange

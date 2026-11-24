@@ -1,0 +1,675 @@
+{
+  "dataset_root": "E:\\ML101\\cityflow-single-target-tracking\\sample_data\\cityflow_sample",
+  "total_cameras": 2,
+  "camera_ids": [
+    "c001",
+    "c002"
+  ],
+  "annotation_formats_detected": [
+    "mot_gt_txt"
+  ],
+  "total_unique_vehicles": 3,
+  "cross_camera_vehicles_count": 1,
+  "single_camera_vehicles_count": 2,
+  "cross_camera_identities": {
+    "1": {
+      "cameras": [
+        "c001",
+        "c002"
+      ],
+      "num_cameras": 2,
+      "timeline": [
+        {
+          "camera_id": "c001",
+          "first_frame": 1,
+          "last_frame": 17,
+          "total_frames": 17
+        },
+        {
+          "camera_id": "c002",
+          "first_frame": 35,
+          "last_frame": 50,
+          "total_frames": 16
+        }
+      ]
+    }
+  },
+  "transition_events": [
+    {
+      "vehicle_id": 1,
+      "from_camera": "c001",
+      "exit_frame": 17,
+      "to_camera": "c002",
+      "entry_frame": 35,
+      "travel_delay_frames": 18
+    }
+  ],
+  "cameras": {
+    "c001": {
+      "camera_id": "c001",
+      "path": "sample_data\\cityflow_sample\\S01\\c001",
+      "media_type": "video",
+      "media_path": "sample_data\\cityflow_sample\\S01\\c001\\vdo.mp4",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "fps": 30.0,
+      "frame_count": 121,
+      "has_roi": true,
+      "roi_path": "sample_data\\cityflow_sample\\S01\\c001\\roi.jpg",
+      "has_calibration": true,
+      "calibration": {
+        "file": "sample_data\\cityflow_sample\\S01\\c001\\calibration.txt",
+        "raw_lines": [
+          "# Camera Calibration for c001 (CityFlow S01)",
+          "# Intrinsic Matrix K",
+          "1600.0 0.0 960.0",
+          "0.0 1600.0 540.0",
+          "0.0 0.0 1.0",
+          "# Distortion Coefficients [k1, k2, p1, p2, k3]",
+          "-0.05 0.02 0.001 0.0005 0.0",
+          "# Extrinsic Matrix [R | t]",
+          "0.998 -0.052 0.034 12.50",
+          "0.048 0.995 0.088 -45.20",
+          "-0.039 -0.086 0.995 8.10",
+          "# Homography Matrix H (Ground Plane)",
+          "1.42e-01 -2.31e-01 4.50e+02",
+          "2.15e-02 4.10e-01 1.20e+02",
+          "1.10e-04 -5.20e-04 1.00e+00"
+        ],
+        "matrices_found": 3,
+        "primary_matrix": [
+          [
+            1600.0,
+            0.0,
+            960.0
+          ],
+          [
+            0.0,
+            1600.0,
+            540.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "annotation_format": "mot_gt_txt",
+      "active_vehicles": [
+        1,
+        2
+      ],
+      "vehicle_frames": {
+        "1": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "2": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ]
+      },
+      "sample_bboxes": [
+        [
+          605,
+          448,
+          459,
+          259
+        ],
+        [
+          646,
+          239,
+          135,
+          105
+        ],
+        [
+          562,
+          440,
+          447,
+          248
+        ],
+        [
+          645,
+          238,
+          137,
+          107
+        ],
+        [
+          507,
+          439,
+          442,
+          243
+        ],
+        [
+          643,
+          240,
+          138,
+          103
+        ],
+        [
+          476,
+          426,
+          439,
+          235
+        ],
+        [
+          644,
+          243,
+          135,
+          102
+        ],
+        [
+          423,
+          420,
+          429,
+          233
+        ],
+        [
+          642,
+          241,
+          133,
+          102
+        ],
+        [
+          380,
+          418,
+          424,
+          225
+        ],
+        [
+          643,
+          236,
+          138,
+          105
+        ],
+        [
+          323,
+          405,
+          449,
+          230
+        ],
+        [
+          642,
+          240,
+          136,
+          103
+        ],
+        [
+          283,
+          403,
+          440,
+          216
+        ],
+        [
+          646,
+          240,
+          131,
+          104
+        ],
+        [
+          231,
+          398,
+          439,
+          214
+        ],
+        [
+          644,
+          229,
+          137,
+          113
+        ],
+        [
+          197,
+          398,
+          412,
+          205
+        ],
+        [
+          644,
+          235,
+          136,
+          107
+        ],
+        [
+          148,
+          392,
+          430,
+          204
+        ],
+        [
+          640,
+          236,
+          136,
+          106
+        ],
+        [
+          112,
+          395,
+          397,
+          194
+        ],
+        [
+          645,
+          240,
+          129,
+          103
+        ],
+        [
+          59,
+          380,
+          419,
+          205
+        ],
+        [
+          643,
+          233,
+          133,
+          108
+        ],
+        [
+          9,
+          387,
+          406,
+          194
+        ],
+        [
+          639,
+          233,
+          137,
+          109
+        ],
+        [
+          0,
+          380,
+          370,
+          197
+        ],
+        [
+          641,
+          233,
+          133,
+          109
+        ],
+        [
+          0,
+          385,
+          312,
+          181
+        ],
+        [
+          639,
+          238,
+          131,
+          106
+        ],
+        [
+          11,
+          385,
+          263,
+          174
+        ],
+        [
+          639,
+          241,
+          130,
+          102
+        ]
+      ]
+    },
+    "c002": {
+      "camera_id": "c002",
+      "path": "sample_data\\cityflow_sample\\S01\\c002",
+      "media_type": "video",
+      "media_path": "sample_data\\cityflow_sample\\S01\\c002\\vdo.mp4",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "fps": 30.0,
+      "frame_count": 121,
+      "has_roi": true,
+      "roi_path": "sample_data\\cityflow_sample\\S01\\c002\\roi.jpg",
+      "has_calibration": true,
+      "calibration": {
+        "file": "sample_data\\cityflow_sample\\S01\\c002\\calibration.txt",
+        "raw_lines": [
+          "# Camera Calibration for c002 (CityFlow S01)",
+          "# Intrinsic Matrix K",
+          "1620.0 0.0 960.0",
+          "0.0 1620.0 540.0",
+          "0.0 0.0 1.0",
+          "# Distortion Coefficients [k1, k2, p1, p2, k3]",
+          "-0.04 0.015 0.0008 0.0003 0.0",
+          "# Extrinsic Matrix [R | t]",
+          "0.985 0.120 -0.125 58.30",
+          "-0.115 0.992 0.045 22.10",
+          "0.129 -0.029 0.991 7.80",
+          "# Homography Matrix H (Ground Plane)",
+          "1.55e-01 -1.95e-01 5.10e+02",
+          "1.85e-02 3.85e-01 1.45e+02",
+          "1.25e-04 -4.80e-04 1.00e+00"
+        ],
+        "matrices_found": 3,
+        "primary_matrix": [
+          [
+            1620.0,
+            0.0,
+            960.0
+          ],
+          [
+            0.0,
+            1620.0,
+            540.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "annotation_format": "mot_gt_txt",
+      "active_vehicles": [
+        1,
+        3
+      ],
+      "vehicle_frames": {
+        "1": [
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50
+        ],
+        "3": [
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50
+        ]
+      },
+      "sample_bboxes": [
+        [
+          576,
+          475,
+          198,
+          190
+        ],
+        [
+          540,
+          469,
+          215,
+          220
+        ],
+        [
+          384,
+          224,
+          210,
+          260
+        ],
+        [
+          523,
+          485,
+          226,
+          224
+        ],
+        [
+          389,
+          220,
+          188,
+          272
+        ],
+        [
+          517,
+          503,
+          224,
+          229
+        ],
+        [
+          380,
+          233,
+          187,
+          257
+        ],
+        [
+          507,
+          513,
+          238,
+          247
+        ],
+        [
+          391,
+          221,
+          176,
+          277
+        ],
+        [
+          494,
+          529,
+          249,
+          258
+        ],
+        [
+          384,
+          222,
+          185,
+          279
+        ],
+        [
+          476,
+          544,
+          259,
+          278
+        ],
+        [
+          377,
+          224,
+          182,
+          278
+        ],
+        [
+          452,
+          560,
+          276,
+          300
+        ],
+        [
+          371,
+          230,
+          183,
+          280
+        ],
+        [
+          418,
+          588,
+          303,
+          315
+        ],
+        [
+          361,
+          220,
+          195,
+          294
+        ],
+        [
+          408,
+          609,
+          305,
+          336
+        ],
+        [
+          355,
+          215,
+          204,
+          298
+        ],
+        [
+          373,
+          629,
+          334,
+          372
+        ],
+        [
+          347,
+          216,
+          209,
+          304
+        ],
+        [
+          349,
+          675,
+          349,
+          390
+        ],
+        [
+          345,
+          225,
+          219,
+          301
+        ],
+        [
+          324,
+          717,
+          349,
+          355
+        ],
+        [
+          344,
+          227,
+          215,
+          309
+        ],
+        [
+          266,
+          746,
+          413,
+          331
+        ],
+        [
+          340,
+          229,
+          225,
+          310
+        ],
+        [
+          209,
+          800,
+          467,
+          276
+        ],
+        [
+          332,
+          228,
+          235,
+          317
+        ],
+        [
+          171,
+          836,
+          501,
+          238
+        ],
+        [
+          320,
+          242,
+          244,
+          306
+        ]
+      ]
+    }
+  },
+  "topology": {
+    "scene_id": "S01",
+    "cameras": [
+      "c001",
+      "c002"
+    ],
+    "transitions": [
+      {
+        "from_camera": "c001",
+        "to_camera": "c002",
+        "probability": 0.85,
+        "expected_delay_frames": 15,
+        "delay_std_frames": 4,
+        "direction": "eastbound"
+      },
+      {
+        "from_camera": "c002",
+        "to_camera": "c001",
+        "probability": 0.8,
+        "expected_delay_frames": 16,
+        "delay_std_frames": 4,
+        "direction": "westbound"
+      }
+    ]
+  },
+  "timestamps": {
+    "c001": 0.0,
+    "c002": 0.0
+  },
+  "scale_stats": {
+    "sample_count": 65,
+    "mean_width": 265.0,
+    "mean_height": 220.8,
+    "mean_aspect_ratio_h_w": 0.9111179535924271,
+    "min_width": 129,
+    "max_width": 501,
+    "min_height": 102,
+    "max_height": 390
+  }
+}

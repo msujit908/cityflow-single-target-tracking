@@ -1,0 +1,4 @@
+global_target_id,from_camera,exit_frame,to_camera,entry_frame,delay_frames,association_score
+1,c001,7,c002,8,1,0.7212486326694488
+1,c002,9,c002,32,23,0.6078883469104767
+1,c002,46,c001,47,1,0.6565811276435851

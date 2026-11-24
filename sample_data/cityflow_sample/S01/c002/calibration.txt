@@ -1,0 +1,15 @@
+# Camera Calibration for c002 (CityFlow S01)
+# Intrinsic Matrix K
+1620.0 0.0 960.0
+0.0 1620.0 540.0
+0.0 0.0 1.0
+# Distortion Coefficients [k1, k2, p1, p2, k3]
+-0.04 0.015 0.0008 0.0003 0.0
+# Extrinsic Matrix [R | t]
+0.985 0.120 -0.125 58.30
+-0.115 0.992 0.045 22.10
+0.129 -0.029 0.991 7.80
+# Homography Matrix H (Ground Plane)
+1.55e-01 -1.95e-01 5.10e+02
+1.85e-02 3.85e-01 1.45e+02
+1.25e-04 -4.80e-04 1.00e+00

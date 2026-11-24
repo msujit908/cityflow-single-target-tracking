@@ -1,0 +1,25 @@
+{
+  "scene_id": "S01",
+  "cameras": [
+    "c001",
+    "c002"
+  ],
+  "transitions": [
+    {
+      "from_camera": "c001",
+      "to_camera": "c002",
+      "probability": 0.85,
+      "expected_delay_frames": 15,
+      "delay_std_frames": 4,
+      "direction": "eastbound"
+    },
+    {
+      "from_camera": "c002",
+      "to_camera": "c001",
+      "probability": 0.8,
+      "expected_delay_frames": 16,
+      "delay_std_frames": 4,
+      "direction": "westbound"
+    }
+  ]
+}
