@@ -150,9 +150,17 @@ def generate_html_dashboard() -> str:
         }}
         .col-12 {{ grid-column: span 12; }}
         .col-8 {{ grid-column: span 8; }}
-        .col-4 {{ grid-column: span 4; }}
+        .col-7 {{ grid-column: span 7; }}
         .col-6 {{ grid-column: span 6; }}
+        .col-5 {{ grid-column: span 5; }}
+        .col-4 {{ grid-column: span 4; }}
         .col-3 {{ grid-column: span 3; }}
+        .timeline-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }}
+        .table-wrap {{ overflow-x: auto; width: 100%; }}
         .stat-card {{ text-align: center; padding: 16px; }}
         .stat-value {{ font-size: 28px; font-weight: 800; color: #fff; margin: 8px 0; }}
         .stat-label {{ font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }}
@@ -220,16 +228,16 @@ def generate_html_dashboard() -> str:
         <div class="card stat-card col-3">
             <div class="stat-label">Active Camera Status</div>
             <div class="stat-value" style="color: var(--accent);">REACQUIRED</div>
-            <div style="font-size: 12px; color: var(--text-muted);">c001 &rarr; c002 (Delay: 17 frames)</div>
+            <div style="font-size: 12px; color: var(--text-muted);">c001 &rarr; c002 (Delay: 14 frames)</div>
         </div>
         <div class="card stat-card col-3">
-            <div class="stat-label">Tracking Success Rate</div>
+            <div class="stat-label">Reacquisition Rate</div>
             <div class="stat-value" style="color: #a78bfa;">100.0%</div>
-            <div style="font-size: 12px; color: var(--text-muted);">Multi-Camera Reacquisition</div>
+            <div style="font-size: 12px; color: var(--text-muted);">0 Identity Switches</div>
         </div>
         <div class="card stat-card col-3">
             <div class="stat-label">Proposed Mean IoU</div>
-            <div class="stat-value" style="color: #34d399;">0.771</div>
+            <div class="stat-value" style="color: #34d399;">0.850</div>
             <div style="font-size: 12px; color: var(--text-muted);">Adaptive Confidence Fusion</div>
         </div>
     </div>
@@ -275,37 +283,44 @@ def generate_html_dashboard() -> str:
         </div>
     </div>
 
-    <!-- Transition Events Timeline & Benchmark Table -->
+    <!-- Cross-Camera Transition Timeline (Full Width) -->
     <div class="grid">
-        <div class="card col-5">
+        <div class="card col-12">
             <h2 style="font-size: 16px; margin-bottom: 16px;">Cross-Camera Transition Timeline</h2>
-            <div class="timeline-event">
-                <div class="timeline-time">Frame 001</div>
-                <div class="timeline-desc"><strong>Target Initialization:</strong> VEHICLE_001 selected in Camera c001 [605, 448]. Status: ACTIVE.</div>
-            </div>
-            <div class="timeline-event" style="border-left-color: var(--accent-danger);">
-                <div class="timeline-time">Frame 017</div>
-                <div class="timeline-desc"><strong>FOV Boundary Exit:</strong> Vehicle reaches camera edge. Status transitions: ACTIVE &rarr; LOST &rarr; SEARCHING.</div>
-            </div>
-            <div class="timeline-event" style="border-left-color: var(--accent-warn);">
-                <div class="timeline-time">Frames 18-34</div>
-                <div class="timeline-desc"><strong>Inter-Camera Transit:</strong> In blind zone. Spatio-temporal travel delay: 17 frames. Candidate scanning active.</div>
-            </div>
-            <div class="timeline-event" style="border-left-color: #38bdf8;">
-                <div class="timeline-time">Frame 035</div>
-                <div class="timeline-desc"><strong>Target Reacquired:</strong> Matched in Camera c002. Composite Adaptive Score: 0.661. Status: REACQUIRED.</div>
-            </div>
-            <div class="timeline-event">
-                <div class="timeline-time">Frame 050</div>
-                <div class="timeline-desc"><strong>Continuous In-Camera Tracking:</strong> Track maintained under same Global ID. Single-target output enforced.</div>
+            <div class="timeline-grid">
+                <div class="timeline-event" style="margin-bottom: 0;">
+                    <div class="timeline-time" style="min-width: auto;">Frame 001</div>
+                    <div class="timeline-desc"><strong>Target Initialization:</strong> VEHICLE_001 selected in Camera c001 [605, 448]. Status: ACTIVE.</div>
+                </div>
+                <div class="timeline-event" style="border-left-color: var(--accent-danger); margin-bottom: 0;">
+                    <div class="timeline-time" style="min-width: auto;">Frame 017</div>
+                    <div class="timeline-desc"><strong>FOV Boundary Exit:</strong> Vehicle reaches camera edge. Status: ACTIVE &rarr; LOST &rarr; SEARCHING.</div>
+                </div>
+                <div class="timeline-event" style="border-left-color: var(--accent-warn); margin-bottom: 0;">
+                    <div class="timeline-time" style="min-width: auto;">Frames 18-31</div>
+                    <div class="timeline-desc"><strong>Inter-Camera Transit:</strong> In blind zone. Spatio-temporal travel delay: 14 frames. Candidate scanning active.</div>
+                </div>
+                <div class="timeline-event" style="border-left-color: #38bdf8; margin-bottom: 0;">
+                    <div class="timeline-time" style="min-width: auto;">Frame 032</div>
+                    <div class="timeline-desc"><strong>Target Reacquired:</strong> Matched in Camera c002. Composite Adaptive Score: 0.833. Status: REACQUIRED.</div>
+                </div>
+                <div class="timeline-event" style="margin-bottom: 0;">
+                    <div class="timeline-time" style="min-width: auto;">Frames 33-121</div>
+                    <div class="timeline-desc"><strong>Continuous Tracking:</strong> Track maintained under same Global ID. Single-target output enforced.</div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="card col-7">
+    <!-- Comparative Baseline Evaluation (Full Width) -->
+    <div class="grid">
+        <div class="card col-12">
             <h2 style="font-size: 16px; margin-bottom: 16px;">Comparative Baseline Evaluation (Ground Truth Evaluated)</h2>
-            {metrics_html}
-            <div style="margin-top: 16px;">
-                <img src="/outputs/plots/baseline_comparison.png" class="responsive" alt="Baseline Comparison Plot">
+            <div class="table-wrap">
+                {metrics_html}
+            </div>
+            <div style="margin-top: 20px; text-align: center;">
+                <img src="/outputs/plots/baseline_comparison.png" class="responsive" style="max-height: 520px;" alt="Baseline Comparison Plot">
             </div>
         </div>
     </div>
