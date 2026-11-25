@@ -10,6 +10,7 @@ Generates:
 
 import os
 import sys
+import subprocess
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
@@ -43,6 +44,26 @@ class Visualizer:
             "LOST": (0, 0, 255),           # Red
             "GT": (255, 0, 255)            # Magenta for GT reference
         }
+
+    def _transcode_h264(self, video_path: str):
+        """Transcodes OpenCV mp4v output to browser-compatible H.264 (yuv420p) via imageio-ffmpeg."""
+        try:
+            import imageio_ffmpeg
+            ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+            tmp = video_path + ".tmp_h264.mp4"
+            cmd = [
+                ffmpeg, "-y", "-i", video_path,
+                "-c:v", "libx264", "-preset", "fast", "-crf", "22",
+                "-pix_fmt", "yuv420p", "-movflags", "+faststart",
+                tmp
+            ]
+            res = subprocess.run(cmd, capture_output=True, text=True)
+            if res.returncode == 0 and os.path.exists(tmp):
+                os.replace(tmp, video_path)
+            elif os.path.exists(tmp):
+                os.remove(tmp)
+        except Exception:
+            pass
 
     def render_annotated_camera_video(self,
                                      method_name: str,
@@ -129,6 +150,7 @@ class Visualizer:
                 out.write(annotated)
 
             out.release()
+            self._transcode_h264(output_path)
             print(f"[+] Rendered single-camera video to: {output_path}")
             return output_path
 
@@ -219,6 +241,7 @@ class Visualizer:
                 out.write(canvas)
 
             out.release()
+            self._transcode_h264(output_path)
             print(f"[+] Rendered Multi-Camera Dashboard Video to: {output_path}")
             return output_path
 
