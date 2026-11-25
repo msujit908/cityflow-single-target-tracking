@@ -63,8 +63,11 @@ st.markdown(
 
 
 def load_csv_safe(path: Path) -> pd.DataFrame:
-    if path.exists():
-        return pd.read_csv(path)
+    if path.exists() and path.stat().st_size > 0:
+        try:
+            return pd.read_csv(path)
+        except pd.errors.EmptyDataError:
+            return pd.DataFrame()
     return pd.DataFrame()
 
 
