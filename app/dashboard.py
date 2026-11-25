@@ -12,7 +12,10 @@ Displays:
 
 import os
 import sys
+import re
 import json
+import mimetypes
+import subprocess
 import http.server
 import socketserver
 from pathlib import Path
@@ -200,7 +203,9 @@ def generate_html_dashboard() -> str:
             <h1>CityFlow Single-Target Multi-Camera Vehicle Tracking</h1>
             <div class="subtitle">M.Tech Video Analytics Research Benchmark | Static Traffic Camera Surveillance</div>
         </div>
-        <div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <button onclick="triggerRun()" id="btn-run" style="background: var(--accent); color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; transition: all 0.2s;">&#x25B6; Run Tracking Live</button>
+            <button onclick="triggerLaunchVideo()" style="background: var(--bg-secondary); color: #fff; border: 1px solid var(--border-color); padding: 8px 14px; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 13px;">&#x1F3AC; Open Media Player</button>
             <span class="badge">&#x25CF; SYSTEM OPERATIONAL</span>
         </div>
     </div>
@@ -312,6 +317,38 @@ def generate_html_dashboard() -> str:
             <img src="/outputs/plots/target_trajectory_proposed_adaptive.png" class="responsive" alt="Target Trajectory">
         </div>
     </div>
+
+    <script>
+        function triggerRun() {{
+            const btn = document.getElementById('btn-run');
+            btn.innerHTML = '&#x23F3; Running Tracking Pipeline...';
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            fetch('/api/run')
+                .then(r => r.json())
+                .then(data => {{
+                    alert('Tracking execution completed successfully! Reloading metrics...');
+                    window.location.reload();
+                }})
+                .catch(err => {{
+                    alert('Run error: ' + err);
+                    btn.innerHTML = '&#x25B6; Run Tracking Live';
+                    btn.disabled = false;
+                    btn.style.opacity = '1.0';
+                }});
+        }}
+
+        function triggerLaunchVideo() {{
+            fetch('/api/launch_video')
+                .then(r => r.json())
+                .then(data => {{
+                    if (data.status === 'ok') {{
+                        console.log('Video player launched on desktop');
+                    }}
+                }})
+                .catch(e => console.error(e));
+        }}
+    </script>
 </body>
 </html>
 """
@@ -319,16 +356,83 @@ def generate_html_dashboard() -> str:
 
 
 class DashboardRequestHandler(http.server.SimpleHTTPRequestHandler):
-    """Custom request handler that serves dashboard HTML and media assets."""
+    """Custom request handler that serves dashboard HTML, API triggers, and media assets."""
+
+    def end_headers(self):
+        self.send_header("Accept-Ranges", "bytes")
+        super().end_headers()
 
     def do_GET(self):
+        # 1. Dashboard Page
         if self.path in ["/", "/index.html", "/dashboard"]:
             self.send_response(200)
             self.send_header("Content-type", "text/html; charset=utf-8")
             self.end_headers()
             self.wfile.write(generate_html_dashboard().encode("utf-8"))
             return
-        # Serve static assets from workspace
+
+        # 2. Trigger Tracking Run API
+        if self.path.startswith("/api/run"):
+            print("\n[*] Received API request: Running Tracking Pipeline...", flush=True)
+            python_bin = sys.executable
+            cmd = [python_bin, "app/main.py", "--mode", "benchmark", "--method", "proposed_adaptive", "--target", "1"]
+            try:
+                proc = subprocess.run(cmd, cwd=str(ROOT_DIR), capture_output=True, text=True, timeout=120)
+                res = {"status": "ok", "returncode": proc.returncode}
+            except Exception as e:
+                res = {"status": "error", "error": str(e)}
+
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
+
+        # 3. Launch Video Player API
+        if self.path.startswith("/api/launch_video"):
+            video_path = os.path.join(ROOT_DIR, "outputs", "videos", "dashboard_proposed_adaptive.mp4")
+            try:
+                if os.path.exists(video_path):
+                    os.startfile(video_path)
+                res = {"status": "ok"}
+            except Exception as e:
+                res = {"status": "error", "error": str(e)}
+
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps(res).encode("utf-8"))
+            return
+
+        # 4. Handle HTTP Range Requests for MP4 Video Streaming
+        range_header = self.headers.get("Range")
+        clean_path = self.path.split("?")[0].lstrip("/")
+        file_path = os.path.join(ROOT_DIR, clean_path)
+
+        if range_header and os.path.exists(file_path) and os.path.isfile(file_path):
+            file_size = os.path.getsize(file_path)
+            content_type, _ = mimetypes.guess_type(file_path)
+            content_type = content_type or "application/octet-stream"
+
+            range_match = re.match(r"bytes=(\d+)-(\d*)", range_header)
+            if range_match:
+                start = int(range_match.group(1))
+                end = int(range_match.group(2)) if range_match.group(2) else file_size - 1
+                end = min(end, file_size - 1)
+                length = end - start + 1
+
+                self.send_response(206)
+                self.send_header("Content-Type", content_type)
+                self.send_header("Content-Range", f"bytes {start}-{end}/{file_size}")
+                self.send_header("Content-Length", str(length))
+                self.end_headers()
+
+                with open(file_path, "rb") as f:
+                    f.seek(start)
+                    self.wfile.write(f.read(length))
+                return
+
+        # 5. Default static asset handler
         return super().do_GET()
 
 
