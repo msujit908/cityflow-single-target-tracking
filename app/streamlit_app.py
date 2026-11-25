@@ -143,13 +143,15 @@ with st.sidebar:
             st.download_button(
                 label="📄 Download Project Report (PDF)",
                 data=f.read(),
-                file_name="CityFlow_ST_MCT_Project_Report.pdf",
+                file_name="STMCT_Project_Report_IITG.pdf",
                 mime="application/pdf",
                 use_container_width=True,
             )
 
     st.markdown(
-        "**Author:** Sujit M. ([@msujit908](https://github.com/msujit908))  \n"
+        "**IIT Guwahati | EE5340 Video Analytics**  \n"
+        "**Supervisor:** Dr. Prithwijit Guha  \n"
+        "**Team:** Sujit Kumar Munda (`254156015`), Rohon Alam (`254156013`), Pranjal Singh Navrang (`264152010`)  \n"
         "**Repo:** [GitHub](https://github.com/msujit908/cityflow-single-target-tracking)"
     )
 
@@ -232,13 +234,14 @@ st.write("")
 # -----------------------------------------------------------------------------
 # Main Navigation Tabs
 # -----------------------------------------------------------------------------
-tab_videos, tab_timeline, tab_benchmark, tab_trajectory, tab_dataset = st.tabs(
+tab_videos, tab_timeline, tab_benchmark, tab_trajectory, tab_dataset, tab_report = st.tabs(
     [
         "🎥 Real Video Tracking",
         "🔀 Cross-Camera Timeline & Logs",
         "📊 Baseline Comparison",
         "🗺️ Trajectories & Re-ID Gallery",
         "📁 Dataset & Methodology",
+        "📄 Project Report",
     ]
 )
 
@@ -441,3 +444,50 @@ with tab_dataset:
     if insp_json:
         with st.expander("Raw Dataset Inspection JSON"):
             st.json(insp_json)
+
+# === TAB 6: Project Report ===
+with tab_report:
+    st.subheader("EE5340 – Video Analytics | Project Report (IIT Guwahati)")
+    st.markdown(
+        """
+        **Title:** *Single-Target Multi-Camera Vehicle Tracking Across Static Traffic Cameras Using Appearance and Spatio-Temporal Association*  
+        **Subtitle:** *A Reliability-Aware Approach using Deep Re-Identification and Adaptive Spatio-Temporal Fusion*  
+        **Supervisor:** Dr. Prithwijit Guha (Associate Professor, Dept. of Electronics and Electrical Engineering, IIT Guwahati)  
+        **School:** School of Interdisciplinary Studies and Sustainability (SiSAS), Indian Institute of Technology Guwahati  
+        **Team Members:**
+        - **Sujit Kumar Munda** (Roll No: `254156015`)
+        - **Rohon Alam** (Roll No: `254156013`)
+        - **Pranjal Singh Navrang** (Roll No: `264152010`)
+        """
+    )
+
+    report_pdf = ROOT_DIR / "outputs" / "reports" / "PROJECT_REPORT.pdf"
+    if report_pdf.exists():
+        size_mb = report_pdf.stat().st_size / (1024 * 1024)
+        st.info(f"Full 43-page PDF Report ready (`outputs/reports/PROJECT_REPORT.pdf`, {size_mb:.2f} MB).")
+        with open(report_pdf, "rb") as f:
+            st.download_button(
+                label="⬇ Download Full IIT Guwahati Project Report (PDF)",
+                data=f.read(),
+                file_name="STMCT_Project_Report_IITG.pdf",
+                mime="application/pdf",
+                type="primary",
+            )
+    else:
+        st.warning("Project report PDF not found at `outputs/reports/PROJECT_REPORT.pdf`.")
+
+    st.divider()
+    st.markdown(
+        """
+        ### Report Chapters Included (43 Pages)
+        1. **Front Matter:** Title Page, Declaration, Certificate, Acknowledgements, Abstract, Contents, List of Figures/Tables/Abbreviations
+        2. **Chapter 1:** Introduction and Motivation
+        3. **Chapter 2:** Literature Review
+        4. **Chapter 3:** Dataset and Exploratory Analysis (including Ground-Truth Identity Check)
+        5. **Chapter 4:** System Architecture and Proposed Methodology
+        6. **Chapter 5:** Implementation Details
+        7. **Chapter 6:** Experimental Results, Comparative Analysis & Validity Audit
+        8. **Chapter 7:** Conclusion and Future Scope
+        9. **Appendix A & Bibliography:** Result Artefacts, Reproducibility Commands & 27 IEEE References
+        """
+    )
