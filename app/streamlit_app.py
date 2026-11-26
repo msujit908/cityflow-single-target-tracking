@@ -234,7 +234,7 @@ st.write("")
 # -----------------------------------------------------------------------------
 # Main Navigation Tabs
 # -----------------------------------------------------------------------------
-tab_videos, tab_timeline, tab_benchmark, tab_trajectory, tab_dataset, tab_report = st.tabs(
+tab_videos, tab_timeline, tab_benchmark, tab_trajectory, tab_dataset, tab_report, tab_pptx = st.tabs(
     [
         "🎥 Real Video Tracking",
         "🔀 Cross-Camera Timeline & Logs",
@@ -242,6 +242,7 @@ tab_videos, tab_timeline, tab_benchmark, tab_trajectory, tab_dataset, tab_report
         "🗺️ Trajectories & Re-ID Gallery",
         "📁 Dataset & Methodology",
         "📄 Project Report",
+        "📽️ Presentation (PPTX)",
     ]
 )
 
@@ -461,36 +462,22 @@ with tab_report:
         """
     )
 
-    report_pdf = ROOT_DIR / "outputs" / "reports" / "PROJECT_REPORT.pdf"
-    pptx_path = ROOT_DIR / "outputs" / "reports" / "STMCT_Presentation.pptx"
-    dl_col1, dl_col2 = st.columns(2)
-    with dl_col1:
-        if report_pdf.exists():
-            size_mb = report_pdf.stat().st_size / (1024 * 1024)
-            st.info(f"Full 43-page PDF Report ready (`outputs/reports/PROJECT_REPORT.pdf`, {size_mb:.2f} MB).")
-            with open(report_pdf, "rb") as f:
-                st.download_button(
-                    label="⬇ Download Full IIT Guwahati Project Report (PDF)",
-                    data=f.read(),
-                    file_name="STMCT_Project_Report_IITG.pdf",
-                    mime="application/pdf",
-                    type="primary",
-                    use_container_width=True,
-                )
-        else:
-            st.warning("Project report PDF not found at `outputs/reports/PROJECT_REPORT.pdf`.")
-    with dl_col2:
-        if pptx_path.exists():
-            pptx_mb = pptx_path.stat().st_size / (1024 * 1024)
-            st.info(f"11-slide Defense Presentation ready (`outputs/reports/STMCT_Presentation.pptx`, {pptx_mb:.2f} MB).")
-            with open(pptx_path, "rb") as f:
-                st.download_button(
-                    label="📊 Download Project Presentation (PPTX)",
-                    data=f.read(),
-                    file_name="STMCT_Presentation_IITG.pptx",
-                    mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                    use_container_width=True,
-                )
+    report_pdf = ROOT_DIR / "reports" / "PROJECT_REPORT.pdf"
+    if not report_pdf.exists():
+        report_pdf = ROOT_DIR / "outputs" / "reports" / "PROJECT_REPORT.pdf"
+    if report_pdf.exists():
+        size_mb = report_pdf.stat().st_size / (1024 * 1024)
+        st.info(f"Full 43-page PDF Report ready (`{report_pdf.relative_to(ROOT_DIR)}`, {size_mb:.2f} MB).")
+        with open(report_pdf, "rb") as f:
+            st.download_button(
+                label="⬇ Download Full IIT Guwahati Project Report (PDF)",
+                data=f.read(),
+                file_name="STMCT_Project_Report_IITG.pdf",
+                mime="application/pdf",
+                type="primary",
+            )
+    else:
+        st.warning("Project report PDF not found.")
 
     st.divider()
     st.markdown(
@@ -507,3 +494,64 @@ with tab_report:
         9. **Appendix A & Bibliography:** Result Artefacts, Reproducibility Commands & 27 IEEE References
         """
     )
+
+# === TAB 7: Presentation (PPTX) ===
+with tab_pptx:
+    st.subheader("EE5340 – Video Analytics | Project Defense Presentation (PPTX)")
+    pptx_file = ROOT_DIR / "reports" / "STMCT_Presentation.pptx"
+    if not pptx_file.exists():
+        pptx_file = ROOT_DIR / "outputs" / "reports" / "STMCT_Presentation.pptx"
+
+    if pptx_file.exists():
+        pptx_mb = pptx_file.stat().st_size / (1024 * 1024)
+        p_col1, p_col2 = st.columns([3, 1])
+        with p_col1:
+            st.info(f"11-Slide Widescreen (16:9) Presentation ready (`{pptx_file.relative_to(ROOT_DIR)}`, {pptx_mb:.2f} MB).")
+        with p_col2:
+            with open(pptx_file, "rb") as f:
+                st.download_button(
+                    label="⬇ Download PPTX",
+                    data=f.read(),
+                    file_name="STMCT_Presentation_IITG.pptx",
+                    mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                    type="primary",
+                    use_container_width=True,
+                )
+
+        st.divider()
+        st.subheader("Interactive Slide-by-Slide Content Preview")
+        try:
+            from pptx import Presentation
+            prs = Presentation(str(pptx_file))
+            slide_labels = []
+            slide_texts = []
+            for idx, slide in enumerate(prs.slides, start=1):
+                lines = []
+                for shp in slide.shapes:
+                    if shp.has_text_frame:
+                        txt = "\n".join(p.text.strip() for p in shp.text_frame.paragraphs if p.text.strip())
+                        if txt and "EE5340 – Video Analytics  |  IIT Guwahati  |" not in txt and not txt.startswith("Slide "):
+                            lines.append(txt)
+                    elif shp.has_table:
+                        tbl_md = []
+                        for r_i, row in enumerate(shp.table.rows):
+                            cells = [c.text.strip().replace("\n", " ") for c in row.cells]
+                            tbl_md.append("| " + " | ".join(cells) + " |")
+                            if r_i == 0:
+                                tbl_md.append("| " + " | ".join(["---"] * len(cells)) + " |")
+                        lines.append("\n".join(tbl_md))
+                first_line = lines[0].splitlines()[0] if lines else f"Slide {idx}"
+                slide_labels.append(f"Slide {idx}: {first_line[:65]}")
+                slide_texts.append(lines)
+
+            selected_slide = st.selectbox("Select Slide to Inspect", range(len(slide_labels)), format_func=lambda i: slide_labels[i])
+            st.markdown(f"### {slide_labels[selected_slide]}")
+            for block in slide_texts[selected_slide]:
+                if block.startswith("| "):
+                    st.markdown(block)
+                else:
+                    st.markdown(block.replace("\n", "  \n"))
+        except Exception as e:
+            st.warning(f"Could not parse PPTX preview ({e}). Use the download button above to open in PowerPoint.")
+    else:
+        st.warning("Presentation file not found.")
