@@ -462,19 +462,35 @@ with tab_report:
     )
 
     report_pdf = ROOT_DIR / "outputs" / "reports" / "PROJECT_REPORT.pdf"
-    if report_pdf.exists():
-        size_mb = report_pdf.stat().st_size / (1024 * 1024)
-        st.info(f"Full 43-page PDF Report ready (`outputs/reports/PROJECT_REPORT.pdf`, {size_mb:.2f} MB).")
-        with open(report_pdf, "rb") as f:
-            st.download_button(
-                label="⬇ Download Full IIT Guwahati Project Report (PDF)",
-                data=f.read(),
-                file_name="STMCT_Project_Report_IITG.pdf",
-                mime="application/pdf",
-                type="primary",
-            )
-    else:
-        st.warning("Project report PDF not found at `outputs/reports/PROJECT_REPORT.pdf`.")
+    pptx_path = ROOT_DIR / "outputs" / "reports" / "STMCT_Presentation.pptx"
+    dl_col1, dl_col2 = st.columns(2)
+    with dl_col1:
+        if report_pdf.exists():
+            size_mb = report_pdf.stat().st_size / (1024 * 1024)
+            st.info(f"Full 43-page PDF Report ready (`outputs/reports/PROJECT_REPORT.pdf`, {size_mb:.2f} MB).")
+            with open(report_pdf, "rb") as f:
+                st.download_button(
+                    label="⬇ Download Full IIT Guwahati Project Report (PDF)",
+                    data=f.read(),
+                    file_name="STMCT_Project_Report_IITG.pdf",
+                    mime="application/pdf",
+                    type="primary",
+                    use_container_width=True,
+                )
+        else:
+            st.warning("Project report PDF not found at `outputs/reports/PROJECT_REPORT.pdf`.")
+    with dl_col2:
+        if pptx_path.exists():
+            pptx_mb = pptx_path.stat().st_size / (1024 * 1024)
+            st.info(f"11-slide Defense Presentation ready (`outputs/reports/STMCT_Presentation.pptx`, {pptx_mb:.2f} MB).")
+            with open(pptx_path, "rb") as f:
+                st.download_button(
+                    label="📊 Download Project Presentation (PPTX)",
+                    data=f.read(),
+                    file_name="STMCT_Presentation_IITG.pptx",
+                    mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                    use_container_width=True,
+                )
 
     st.divider()
     st.markdown(
