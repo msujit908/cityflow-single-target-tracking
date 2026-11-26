@@ -519,6 +519,26 @@ with tab_pptx:
                 )
 
         st.divider()
+        st.subheader("Presentation Video Walkthrough")
+        pres_vid_local = ROOT_DIR / "videos" / "presentation_video.mp4"
+        sharepoint_url = "https://iitgoffice-my.sharepoint.com/:v:/g/personal/a_rohon_iitg_ac_in/IQD7vWYK-E-MR6hq7lF1W_0iAU1G3wlLPQlJiFtjssl_sXQ?e=8ZfQsb"
+        if pres_vid_local.exists():
+            st.video(str(pres_vid_local))
+        pv_col1, pv_col2 = st.columns([3, 1])
+        with pv_col1:
+            st.caption(
+                "Recorded PowerPoint Slide Show (`STMCT_Presentation_Simplified.mp4`). "
+                "Note: IITG SharePoint enforces `X-Frame-Options: DENY`, so external playback opens in a new tab unless the MP4 is saved locally at `videos/presentation_video.mp4`."
+            )
+        with pv_col2:
+            st.link_button(
+                "🎬 Watch Presentation Video",
+                sharepoint_url,
+                type="primary",
+                use_container_width=True,
+            )
+
+        st.divider()
         st.subheader("Interactive Slide-by-Slide Content Preview")
         try:
             from pptx import Presentation
