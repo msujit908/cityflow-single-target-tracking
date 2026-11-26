@@ -506,7 +506,7 @@ with tab_pptx:
         pptx_mb = pptx_file.stat().st_size / (1024 * 1024)
         p_col1, p_col2 = st.columns([3, 1])
         with p_col1:
-            st.info(f"11-Slide Widescreen (16:9) Presentation ready (`{pptx_file.relative_to(ROOT_DIR)}`, {pptx_mb:.2f} MB).")
+            st.info(f"12-Slide Widescreen (16:9) Presentation ready (`{pptx_file.relative_to(ROOT_DIR)}`, {pptx_mb:.2f} MB).")
         with p_col2:
             with open(pptx_file, "rb") as f:
                 st.download_button(
